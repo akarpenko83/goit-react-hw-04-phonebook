@@ -30,7 +30,6 @@ export default function ContactForm(props) {
     };
 
     const handleChange = evt => {
-        console.log(evt.currentTarget.name);
         const event = evt.currentTarget.name;
         switch (event) {
             case 'name':
