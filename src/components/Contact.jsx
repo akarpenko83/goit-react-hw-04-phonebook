@@ -6,7 +6,6 @@ export default function Contact({
     number,
     onDelete,
 }) {
-    console.log(typeof number);
     return (
         <>
             {name}: {number}

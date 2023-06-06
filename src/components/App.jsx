@@ -1,12 +1,86 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from './Phonebook.styled';
-import INITIAL_CONTACTS from './initContacts.json';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
 import { SectionName } from './Phonebook.styled';
 import background from '../utils/background.js';
+
+const App = () => {
+    const [contacts, setContacts] = useState(
+        JSON.parse(localStorage.getItem('contactList')) ??
+            [],
+    );
+    const [filter, setFilter] = useState('');
+
+    useEffect(() => {
+        localStorage.setItem(
+            'contactList',
+            JSON.stringify(contacts),
+        );
+    }, [contacts]);
+
+    useEffect(() => {
+        window.onload = background;
+    }, []);
+
+    const onSubmit = contact => {
+        console.log(contact);
+        if (
+            contacts.find(arr => arr.name === contact.name)
+        ) {
+            alert(
+                `${contact.name} is already in the contact list`,
+            );
+            return;
+        }
+
+        setContacts(prevState => {
+            return [...prevState, contact];
+        });
+    };
+
+    const handleRemoveContact = contactId => {
+        setContacts(prevState => {
+            return prevState.filter(
+                contact => contact.id !== contactId,
+            );
+        });
+    };
+
+    const handleChangeFilter = evt => {
+        setFilter(evt.target.value);
+    };
+
+    const getFilteredContacts = () => {
+        return contacts.filter(contact =>
+            contact.name
+                .toLowerCase()
+                .includes(filter.toLowerCase()),
+        );
+    };
+    return (
+        <Container>
+            <SectionName>Phonebook</SectionName>
+            <ContactForm onSubmit={onSubmit} />
+            <h2>Contacts</h2>
+            <Filter
+                value={filter}
+                onChange={handleChangeFilter}
+            />
+            <ContactList
+                contacts={getFilteredContacts()}
+                onRemoveContact={handleRemoveContact}
+            />
+        </Container>
+    );
+};
+export default App;
+
+/*---------------------------------------------------------------- Component Methods----------------------------------------------------------------
 class App extends Component {
+    
+    
     state = {
         contacts: INITIAL_CONTACTS,
         filter: '',
@@ -90,3 +164,4 @@ class App extends Component {
     }
 }
 export default App;
+*/
