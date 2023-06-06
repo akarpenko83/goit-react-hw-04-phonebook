@@ -31,6 +31,7 @@ class App extends Component {
         }
     }
     onSubmit = contact => {
+        console.log(contact);
         if (
             this.state.contacts.find(
                 arr => arr.name === contact.name,

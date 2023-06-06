@@ -6,6 +6,7 @@ export default function Contact({
     number,
     onDelete,
 }) {
+    console.log(typeof number);
     return (
         <>
             {name}: {number}
@@ -17,6 +18,6 @@ export default function Contact({
 }
 Contact.propTypes = {
     name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
+    // number: PropTypes.string.isRequired,
     onDelete: PropTypes.func.isRequired,
 };
