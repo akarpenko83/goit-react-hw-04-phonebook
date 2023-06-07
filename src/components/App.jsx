@@ -7,17 +7,27 @@ import { SectionName } from './Phonebook.styled';
 import background from '../utils/background.js';
 
 const App = () => {
-    const [contacts, setContacts] = useState(
-        JSON.parse(localStorage.getItem('contactList')) ??
-            [],
-    );
+    const [contacts, setContacts] = useState('');
     const [filter, setFilter] = useState('');
 
     useEffect(() => {
-        localStorage.setItem(
-            'contactList',
-            JSON.stringify(contacts),
-        );
+        const localStorageContacts =
+            localStorage.getItem('contactList');
+        if (localStorageContacts) {
+            setContacts(
+                JSON.parse(
+                    localStorage.getItem('contactList'),
+                ),
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        contacts &&
+            localStorage.setItem(
+                'contactList',
+                JSON.stringify(contacts),
+            );
     }, [contacts]);
 
     useEffect(() => {
@@ -26,6 +36,9 @@ const App = () => {
 
     const onSubmit = contact => {
         console.log(contact);
+        if (!contacts) {
+            return setContacts([contact]);
+        }
         if (
             contacts.find(arr => arr.name === contact.name)
         ) {
@@ -64,14 +77,18 @@ const App = () => {
             <SectionName>Phonebook</SectionName>
             <ContactForm onSubmit={onSubmit} />
             <h2>Contacts</h2>
-            <Filter
-                value={filter}
-                onChange={handleChangeFilter}
-            />
-            <ContactList
-                contacts={getFilteredContacts()}
-                onRemoveContact={handleRemoveContact}
-            />
+            {contacts && (
+                <Filter
+                    value={filter}
+                    onChange={handleChangeFilter}
+                />
+            )}
+            {contacts && (
+                <ContactList
+                    contacts={getFilteredContacts()}
+                    onRemoveContact={handleRemoveContact}
+                />
+            )}
         </Container>
     );
 };
