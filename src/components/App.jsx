@@ -5,6 +5,9 @@ import ContactList from './ContactList';
 import Filter from './Filter';
 import { SectionName } from './Phonebook.styled';
 import background from '../utils/background.js';
+import toast, { Toaster } from 'react-hot-toast';
+
+// const notify = () => toast('Notification');
 
 const App = () => {
     const [contacts, setContacts] = useState('');
@@ -37,23 +40,34 @@ const App = () => {
     const onSubmit = contact => {
         console.log(contact);
         if (!contacts) {
+            toast.success(
+                `${contact.name} added to your contact list`,
+            );
             return setContacts([contact]);
         }
         if (
             contacts.find(arr => arr.name === contact.name)
         ) {
-            alert(
+            toast.error(
                 `${contact.name} is already in the contact list`,
             );
+            // alert(
+            //     `${contact.name} is already in the contact list`,
+            // );
             return;
         }
-
+        toast.success(
+            `${contact.name} added to your contact list`,
+        );
         setContacts(prevState => {
             return [...prevState, contact];
         });
     };
 
     const handleRemoveContact = contactId => {
+        toast.success(
+            `Successfully deleted from contact list`,
+        );
         setContacts(prevState => {
             return prevState.filter(
                 contact => contact.id !== contactId,
@@ -74,6 +88,7 @@ const App = () => {
     };
     return (
         <Container>
+            <Toaster />
             <SectionName>Phonebook</SectionName>
             <ContactForm onSubmit={onSubmit} />
             <h2>Contacts</h2>
