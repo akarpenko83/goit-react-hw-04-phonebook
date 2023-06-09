@@ -56,14 +56,15 @@ const App = () => {
     };
 
     const handleRemoveContact = contactId => {
-        toast.success(
-            `Successfully deleted from contact list`,
-        );
+       
         setContacts(prevState => {
             return prevState.filter(
                 contact => contact.id !== contactId,
             );
         });
+         toast.success(
+            `Successfully deleted from contact list`,
+        );
     };
 
     const handleChangeFilter = evt => {
