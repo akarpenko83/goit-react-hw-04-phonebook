@@ -7,23 +7,17 @@ import { SectionName } from './Phonebook.styled';
 import background from '../utils/background.js';
 import toast, { Toaster } from 'react-hot-toast';
 
-// const notify = () => toast('Notification');
-
 const App = () => {
-    const [contacts, setContacts] = useState('');
-    const [filter, setFilter] = useState('');
-
-    useEffect(() => {
-        const localStorageContacts =
-            localStorage.getItem('contactList');
-        if (localStorageContacts) {
-            setContacts(
-                JSON.parse(
-                    localStorage.getItem('contactList'),
-                ),
+    const [contacts, setContacts] = useState(() => {
+        if (localStorage.getItem('contactList')) {
+            return JSON.parse(
+                localStorage.getItem('contactList'),
             );
+        } else {
+            return [];
         }
-    }, []);
+    });
+    const [filter, setFilter] = useState('');
 
     useEffect(() => {
         contacts &&
@@ -38,7 +32,6 @@ const App = () => {
     }, []);
 
     const onSubmit = contact => {
-        console.log(contact);
         if (!contacts) {
             toast.success(
                 `${contact.name} added to your contact list`,
@@ -51,9 +44,7 @@ const App = () => {
             toast.error(
                 `${contact.name} is already in the contact list`,
             );
-            // alert(
-            //     `${contact.name} is already in the contact list`,
-            // );
+
             return;
         }
         toast.success(
@@ -108,92 +99,3 @@ const App = () => {
     );
 };
 export default App;
-
-/*---------------------------------------------------------------- Component Methods----------------------------------------------------------------
-class App extends Component {
-    
-    
-    state = {
-        contacts: INITIAL_CONTACTS,
-        filter: '',
-    };
-    componentDidMount() {
-        let storedContacts = JSON.parse(
-            localStorage.getItem('contactList'),
-        );
-
-        if (storedContacts) {
-            this.setState({
-                contacts: storedContacts,
-            });
-        }
-    }
-    componentDidUpdate(prevState) {
-        if (this.state.contacts !== prevState.contacts) {
-            localStorage.setItem(
-                'contactList',
-                JSON.stringify(this.state.contacts),
-            );
-        }
-    }
-    onSubmit = contact => {
-        console.log(contact);
-        if (
-            this.state.contacts.find(
-                arr => arr.name === contact.name,
-            )
-        ) {
-            alert(
-                `${contact.name} is already in the contact list`,
-            );
-            return;
-        }
-        this.setState(prevState => ({
-            contacts: [...this.state.contacts, contact],
-        }));
-    };
-
-    handleRemoveContact = contactId => {
-        this.setState(prevState => ({
-            contacts: prevState.contacts.filter(
-                contact => contact.id !== contactId,
-            ),
-        }));
-    };
-
-    handleChangeFilter = evt => {
-        this.setState({ filter: evt.target.value });
-    };
-
-    getFilteredContacts = () => {
-        const normalizedFilter =
-            this.state.filter.toLowerCase();
-        return this.state.contacts.filter(contact =>
-            contact.name
-                .toLowerCase()
-                .includes(normalizedFilter),
-        );
-    };
-    render() {
-        window.onload = background;
-        return (
-            <Container>
-                <SectionName>Phonebook</SectionName>
-                <ContactForm onSubmit={this.onSubmit} />
-                <h2>Contacts</h2>
-                <Filter
-                    value={this.state.filter}
-                    onChange={this.handleChangeFilter}
-                />
-                <ContactList
-                    contacts={this.getFilteredContacts()}
-                    onRemoveContact={
-                        this.handleRemoveContact
-                    }
-                />
-            </Container>
-        );
-    }
-}
-export default App;
-*/
